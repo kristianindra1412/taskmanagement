@@ -59,7 +59,18 @@ class TaskController extends Controller
 
     public function delete(Task $task)
     {
-        $task->delete();
+        DB::transaction(function () use ($task) {
+            $task->delete();
+
+            // Handling if middle priority is deleted, we need to reassign priorities to maintain contiguous order.
+            $tasks = Task::orderBy('priority')->get(['id']);
+
+            foreach ($tasks as $index => $t) {
+                Task::where('id', $t->id)->update([
+                    'priority' => $index + 1,
+                ]);
+            }
+        });
 
         return redirect()->route('tasks.index');
     }

@@ -96,6 +96,18 @@ div.form {
     opacity: 0.9;
 }
 
-#task-list tr {
-    cursor: move;
+.drag-handle {
+    cursor: grab;
+    user-select: none;
+    font-size: 18px;
+    text-align: center;
+    width: 50px;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
 }

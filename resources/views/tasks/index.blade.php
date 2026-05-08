@@ -20,6 +20,7 @@
     <table>
         <thead>
             <tr>
+                <th style="width: 50px;"></th>
                 <th>Actions</th>                
                 <th>Priority</th>
                 <th>Task Name</th>
@@ -30,6 +31,7 @@
         <tbody id="task-list">
             @forelse ($tasks as $task)
                 <tr data-id="{{ $task->id }}">
+                    <td class="drag-handle" title="Drag to reorder">☰</td>
                     <td style="text-align: center;">
                         <a href="{{ route('tasks.edit', $task) }}"><button class="btn btn-primary">> Edit</button></a>
                         <form method="POST" action="{{ route('tasks.delete', $task) }}">
@@ -61,6 +63,8 @@
 
     new Sortable(taskList, {
         animation: 150,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
         onEnd: async () => {
             const ids = Array.from(taskList.querySelectorAll('tr'))
                 .map(row => Number(row.dataset.id));
