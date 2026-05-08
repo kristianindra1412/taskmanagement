@@ -7,26 +7,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Task;
+use App\Models\Project;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::orderBy('priority')->get();
+        $projects = Project::orderBy('name')->get();
+        $projectId = $request->integer('project_id'); // null if not present / invalid
 
-        return view('tasks.index', compact('tasks'));
+        $tasksQuery = Task::query();
+
+        if ($projectId) {
+            $tasksQuery->where('project_id', $projectId);
+        }
+
+        $tasks = $tasksQuery->with('project')->orderBy('priority')->get();
+
+        return view('tasks.index', compact('tasks', 'projects', 'projectId'));
     }
 
     public function create()
     {
-        return view('tasks.create');
+        $projects = Project::orderBy('name')->get();
+
+        return view('tasks.create', compact('projects'));
     }
 
     public function store(Request $request)
-{
+    {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
         ]);
+
+        $projectId = $validated['project_id'] ?? null;
 
         // next priority = current max + 1
         $nextPriority = (Task::max('priority') ?? 0) + 1;
@@ -34,27 +49,38 @@ class TaskController extends Controller
         Task::create([
             'name' => $validated['name'],
             'priority' => $nextPriority,
+            'project_id' => $projectId,
         ]);
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('tasks.index', [
+            'project_id' => $projectId, // keep filter UX
+        ]);
     }
 
     public function edit(Task $task)
     {
-        return view('tasks.edit', compact('task'));
+        $projects = Project::orderBy('name')->get();
+        
+        return view('tasks.edit', compact('task', 'projects'));
     }
 
     public function update(Request $request, Task $task)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
         ]);
+
+        $projectId = $validated['project_id'] ?? null;
 
         $task->update([
             'name' => $validated['name'],
+            'project_id' => $projectId,
         ]);
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('tasks.index', [
+            'project_id' => $projectId, // keep filter UX
+        ]);        
     }
 
     public function delete(Task $task)

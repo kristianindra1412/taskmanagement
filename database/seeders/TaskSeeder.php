@@ -13,22 +13,27 @@ class TaskSeeder extends Seeder
             [
                 'name' => 'Prepare interview project',
                 'priority' => 1,
+                'project_id' => 1,
             ],
             [
                 'name' => 'Create database migration',
                 'priority' => 2,
+                'project_id' => 1,
             ],
             [
                 'name' => 'Implement drag and drop',
                 'priority' => 3,
+                'project_id' => 2,
             ],
             [
                 'name' => 'Add task edit feature',
                 'priority' => 4,
+                'project_id' => 2,
             ],
             [
                 'name' => 'Write README documentation',
                 'priority' => 5,
+                'project_id' => 3,
             ],
         ];
 

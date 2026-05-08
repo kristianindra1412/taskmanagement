@@ -13,15 +13,45 @@
 
     <h1>Task List</h1>
 
+    <!-- New task -->
     <div class="action">
         <a href="{{ route('tasks.create') }}"><button class="btn btn-success">+ Create New Task</button></a>
     </div>
 
+    <!-- Filter by project -->
+    <div class="action">
+        <form method="GET" action="{{ route('tasks.index') }}" style="margin-bottom: 16px;">
+            <label for="project_id">Project Filter:</label>
+
+            <select name="project_id" id="project_id" onchange="this.form.submit()">
+                <option value="">All Projects</option>
+
+                @foreach ($projects as $project)
+                    <option
+                        value="{{ $project->id }}"
+                        @selected($projectId === $project->id)
+                    >
+                        {{ $project->name }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
+        @if ($projectId)
+            <div class="info">
+                Reordering is disabled while filtering by project. Switch to “All Projects” to reorder tasks.
+            </div>
+        @endif        
+    </div>
+
+    <!-- Task list -->
     <table>
         <thead>
             <tr>
+                @if (!$projectId)
                 <th style="width: 50px;"></th>
+                @endif
                 <th>Actions</th>                
+                <th>Project</th>                
                 <th>Priority</th>
                 <th>Task Name</th>
                 <th>Created At</th>
@@ -31,7 +61,9 @@
         <tbody id="task-list">
             @forelse ($tasks as $task)
                 <tr data-id="{{ $task->id }}">
+                    @if (!$projectId)
                     <td class="drag-handle" title="Drag to reorder">☰</td>
+                    @endif
                     <td style="text-align: center;">
                         <a href="{{ route('tasks.edit', $task) }}"><button class="btn btn-primary">> Edit</button></a>
                         <form method="POST" action="{{ route('tasks.delete', $task) }}">
@@ -42,13 +74,14 @@
                             </button>
                         </form>
                     </td>                    
+                    <td>{{ $task->project->name ?? '-' }}</td>
                     <td style="text-align: right;" data-col="priority">{{ $task->priority }}</td>
                     <td>{{ $task->name }}</td>
                     <td style="text-align: right;">{{ $task->created_at }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3">
+                    <td colspan="{{ $projectId ? 5 : 6 }}" style="text-align: center; padding: 32px;">
                         No tasks found.
                     </td>
                 </tr>

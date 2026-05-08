@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 720px;
+    max-width: 1024px;
     margin: 40px auto;
     padding: 0 16px;
 }
@@ -8,6 +8,11 @@ body {
 input { 
     padding: 8px; 
     width: 360px; 
+}
+
+select {
+    padding: 8px;
+    min-width: 200px;
 }
 
 a { 
@@ -53,6 +58,14 @@ div.action {
 
 div.form {
     text-align: center;
+    margin-top: 32px;
+}
+
+div.info {
+    margin: 10px 0;
+    padding: 10px;
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
 }
 
 .error { 

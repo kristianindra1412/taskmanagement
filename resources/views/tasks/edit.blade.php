@@ -18,6 +18,27 @@
         @method('PUT')
 
         <div class="form">
+            <label>Project</label><br>
+
+            <select name="project_id">
+                <option value="">(No project)</option>
+
+                @foreach ($projects as $project)
+                    <option
+                        value="{{ $project->id }}"
+                        @selected((int) old('project_id', $task->project_id) === $project->id)
+                    >
+                        {{ $project->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            @error('project_id')
+                <div class="error">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form">
             <label>Task name</label><br>
             <input type="text" name="name" value="{{ old('name', $task->name) }}" placeholder="Put your task here" required>
 
