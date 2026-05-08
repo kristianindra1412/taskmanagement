@@ -2,31 +2,15 @@
 <html>
 <head>
     <title>Task Manager</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        table {
-            width: 600px;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        th {
-            background: #f5f5f5;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/task.css') }}">
 </head>
 <body>
 
     <h1>Task List</h1>
+
+    <div class="action">
+        <a href="{{ route('tasks.create') }}"><button>+ Create New Task</button></a>
+    </div>
 
     <table>
         <thead>
@@ -40,9 +24,9 @@
         <tbody>
             @forelse ($tasks as $task)
                 <tr>
-                    <td>{{ $task->priority }}</td>
+                    <td style="text-align: right;">{{ $task->priority }}</td>
                     <td>{{ $task->name }}</td>
-                    <td>{{ $task->created_at }}</td>
+                    <td style="text-align: right;">{{ $task->created_at }}</td>
                 </tr>
             @empty
                 <tr>

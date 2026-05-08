@@ -9,7 +9,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-
-// require __DIR__.'/settings.php';
-// require __DIR__.'/auth.php';
+Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
 
