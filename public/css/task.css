@@ -95,3 +95,7 @@ div.form {
 .btn:hover {
     opacity: 0.9;
 }
+
+#task-list tr {
+    cursor: move;
+}
